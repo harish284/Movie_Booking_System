@@ -13,16 +13,7 @@ pipeline {
             }
         }
 
-        stage('Build Frontend Docker Image') {
-            steps {
-                script {
-                    
-                    sh '''
-                        docker build -f client/../frontend.dockerfile -t $FRONTEND_IMAGE client
-                    '''
-                }
-            }
-        }
+     
 
         stage('Build Backend Docker Image') {
             steps {
