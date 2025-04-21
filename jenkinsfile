@@ -7,25 +7,31 @@ pipeline {
     }
 
     stages {
-        stage('Check-out') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/harish284/Movie_Booking_System.git'
             }
         }
 
-        stage('Build Frontend Image') {
+        stage('Build Frontend Docker Image') {
             steps {
-                sh '''
-                    docker build -f client/../frontend.dockerfile -t $FRONTEND_IMAGE client
-                '''
+                script {
+                    
+                    sh '''
+                        docker build -f client/../frontend.dockerfile -t $FRONTEND_IMAGE client
+                    '''
+                }
             }
         }
 
-        stage('Build Backend Image') {
+        stage('Build Backend Docker Image') {
             steps {
-                sh '''
-                    docker build -f backend.dockerfile -t $BACKEND_IMAGE .
-                '''
+                script {
+                    ]
+                    sh '''
+                        docker build -f backend.dockerfile -t $BACKEND_IMAGE .
+                    '''
+                }
             }
         }
 
@@ -33,6 +39,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                       
                         sh '''
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                             docker push $FRONTEND_IMAGE
@@ -46,10 +53,10 @@ pipeline {
 
     post {
         success {
-            echo ' Docker images built and pushed successfully!'
+            echo 'Docker images have been built and pushed successfully!'
         }
         failure {
-            echo ' Docker build or push failed.'
+            echo 'Pipeline failed!'
         }
     }
 }
