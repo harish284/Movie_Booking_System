@@ -13,14 +13,15 @@ pipeline {
             }
         }
 
-        stage('Frontend Build and Test') {
-            steps {
-                sh '''
-                    docker build -f frontend.dockerfile -t $FRONTEND_IMAGE .
-                    docker run --rm $FRONTEND_IMAGE echo "Frontend build completed!"
-                '''
-            }
-        }
+       stage('Frontend Build and Test') {
+             steps {
+                   sh '''
+                      docker build -f client/../frontend.dockerfile -t $FRONTEND_IMAGE client
+                      docker run --rm $FRONTEND_IMAGE echo "Frontend build completed!"
+                  '''
+          }
+     }
+
 
         stage('Backend Build and Test') {
             steps {
