@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Check-out') {
             steps {
-                git branch: 'main', url: 'https://github.com/harish284/smartcom.git'
+                git branch: 'main', url: 'https://github.com/harish284/Movie_Booking_System.git'
             }
         }
 
