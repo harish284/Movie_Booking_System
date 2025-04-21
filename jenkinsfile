@@ -27,7 +27,6 @@ pipeline {
         stage('Build Backend Docker Image') {
             steps {
                 script {
-                    ]
                     sh '''
                         docker build -f backend.dockerfile -t $BACKEND_IMAGE .
                     '''
