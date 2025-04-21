@@ -13,13 +13,21 @@ pipeline {
             }
         }
 
-     
-
         stage('Build Backend Docker Image') {
             steps {
                 script {
                     sh '''
-                        docker build -f backend.dockerfile -t $BACKEND_IMAGE .
+                        docker build -f backend.dockerfile -t $BACKEND_IMAGE ./server
+                    '''
+                }
+            }
+        }
+
+        stage('Build Frontend Docker Image') {
+            steps {
+                script {
+                    sh '''
+                        docker build -f frontend.dockerfile -t $FRONTEND_IMAGE ./client
                     '''
                 }
             }
@@ -29,7 +37,6 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                       
                         sh '''
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                             docker push $FRONTEND_IMAGE
@@ -43,7 +50,7 @@ pipeline {
 
     post {
         success {
-            echo 'Docker images have been built and pushed successfully!'
+            echo 'Docker images have been pushed successfully!'
         }
         failure {
             echo 'Pipeline failed!'
