@@ -16,7 +16,6 @@ pipeline {
         stage('Frontend Build and Test') {
             steps {
                 sh '''
-                    echo "Building and testing frontend inside Docker..."
                     docker build -f frontend.dockerfile -t $FRONTEND_IMAGE .
                     docker run --rm $FRONTEND_IMAGE echo "Frontend build completed!"
                 '''
@@ -26,7 +25,6 @@ pipeline {
         stage('Backend Build and Test') {
             steps {
                 sh '''
-                    echo "Building and testing backend inside Docker..."
                     docker build -f backend.dockerfile -t $BACKEND_IMAGE .
                     docker run --rm $BACKEND_IMAGE echo "Backend build completed!"
                 '''
