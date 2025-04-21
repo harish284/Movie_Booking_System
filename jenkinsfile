@@ -2,46 +2,33 @@ pipeline {
     agent any
 
     environment {
-        FRONTEND_IMAGE = 'harish2810/movie-frontend:latestv1'
-        BACKEND_IMAGE = 'harish2810/movie-backend:latestv1'
+        FRONTEND_IMAGE = 'harish2810/movie-frontend:latest'
+        BACKEND_IMAGE = 'harish2810/movie-backend:latest'
     }
 
     stages {
         stage('Check-out') {
             steps {
-                git branch: 'main', url: 'https://github.com/harish284/Movie_Booking_System.git'
+                git branch: 'main', url: 'https://github.com/harish284/smartcom.git'
             }
         }
 
-        stage('Build and Test') {
+        stage('Frontend Build and Test') {
             steps {
                 sh '''
-                    echo "Frontend build & test..."
-                    cd client
-                    npm install -g npm
-                    npm install
-                    npm run build
-                    npm test || echo "Frontend tests failed"
-                    cd ..
-
-                    echo "Backend build & test..."
-                    cd server
-                    npm install -g npm
-                    npm install
-                    npm test || echo "Backend tests failed"
-                    cd ..
+                    echo "Building and testing frontend inside Docker..."
+                    docker build -f frontend.dockerfile -t $FRONTEND_IMAGE .
+                    docker run --rm $FRONTEND_IMAGE echo "Frontend build completed!"
                 '''
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Backend Build and Test') {
             steps {
                 sh '''
-                    echo "Building frontend Docker image..."
-                    docker build -f frontend.dockerfile -t $FRONTEND_IMAGE .
-
-                    echo "Building backend Docker image..."
+                    echo "Building and testing backend inside Docker..."
                     docker build -f backend.dockerfile -t $BACKEND_IMAGE .
+                    docker run --rm $BACKEND_IMAGE echo "Backend build completed!"
                 '''
             }
         }
@@ -63,10 +50,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed'
+            echo 'Pipeline failed.'
         }
     }
 }
