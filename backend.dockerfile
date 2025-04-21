@@ -11,6 +11,7 @@ RUN npm install -g nodemon
 # Copy the application code
 COPY . .
 
+#port
 EXPOSE 5000
 
 CMD ["npx", "nodemon", "index.js"]
