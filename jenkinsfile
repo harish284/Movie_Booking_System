@@ -13,21 +13,18 @@ pipeline {
             }
         }
 
-       stage('Frontend Build and Test') {
-             steps {
-                   sh '''
-                      docker build -f client/../frontend.dockerfile -t $FRONTEND_IMAGE client
-                      docker run --rm $FRONTEND_IMAGE echo "Frontend build completed!"
-                  '''
-          }
-     }
+        stage('Build Frontend Image') {
+            steps {
+                sh '''
+                    docker build -f client/../frontend.dockerfile -t $FRONTEND_IMAGE client
+                '''
+            }
+        }
 
-
-        stage('Backend Build and Test') {
+        stage('Build Backend Image') {
             steps {
                 sh '''
                     docker build -f backend.dockerfile -t $BACKEND_IMAGE .
-                    docker run --rm $BACKEND_IMAGE echo "Backend build completed!"
                 '''
             }
         }
@@ -49,10 +46,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo ' Docker images built and pushed successfully!'
         }
         failure {
-            echo 'Pipeline failed.'
+            echo ' Docker build or push failed.'
         }
     }
 }
